@@ -22,7 +22,8 @@ public class AuditServiceImpl implements AuditService {
     }
 
     @Override
-    public void addOperation(Operation o) {
+    public boolean addOperation(Operation o) {
         lastOperations.add(o);
+        return true;
     }
 }

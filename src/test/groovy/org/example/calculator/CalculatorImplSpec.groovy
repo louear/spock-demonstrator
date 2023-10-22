@@ -48,11 +48,10 @@ class CalculatorImplSpec extends Specification {
     }
 
     def 'adding two numbers adds saves the operation in the AuditService'() {
-        given: 'a calculator'
-
+        given:
         def history = Mock(AuditService)       // creates a mock implementation for interface OperationsHistory
         def calculator = new CalculatorImpl(history)
-
+        
         when:
         def result = calculator.add(1.5, 0.5)
         then:
@@ -63,7 +62,7 @@ class CalculatorImplSpec extends Specification {
 //        1* history.addOperation(_)
 
         // when failure, good error reporting in the test logs
-        1 * history.addOperation(new Operation(OperationType.ADD, 2, [1.5, 0.5] /* a list */, 2.0))
+        1 * history.addOperation(new Operation(OperationType.ADD, 2, [1.5, 0.5] /* a list */, 2.0)) >> true     // contains both stubbed behaviour (returns true) Mocking ( check number of calls + call params)
         // cardinality range
 //        (0..1)* history.addOperation(new Operation(OperationType.ADD, 2, [1.5,0.5], 2.0))
 
@@ -111,7 +110,7 @@ class CalculatorImplSpec extends Specification {
     }
 
     // example: expecting an exception to be thrown
-    def 'dividing by zero thows an exception'() {
+    def 'dividing by zero throws an exception'() {
         when:
         calculator.divide(123, 0)
         then:
@@ -121,15 +120,23 @@ class CalculatorImplSpec extends Specification {
 
 
     def 'Mocks with stubbed behaviour'() {
-        given: 'a calculator'
-
+        given:
         def history = Mock(AuditService)       // creates a mock implementation for interface OperationsHistory
+//        history.addOperation(_) >> true     // stubbed behaviour for the addOperation method
+        history.addOperation(_) >>> [true, false]     // stubbed behaviour for the addOperation method with multiple calls
         def calculator = new CalculatorImpl(history)
 
         when:
         def result = calculator.add(1.5, 0.5)
         then:
         result == 2.0
+
+        when:
+        calculator.add(1.5, 0.5)
+        then:
+        def e = thrown(RuntimeException)
+        e.message == "Failed to save operation with audit service"
+
 
     }
 }

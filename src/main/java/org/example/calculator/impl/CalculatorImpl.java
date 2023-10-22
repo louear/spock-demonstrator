@@ -18,8 +18,11 @@ public class CalculatorImpl implements Calculator {
     @Override
     public BigDecimal add(BigDecimal a, BigDecimal b) {
         BigDecimal result = a.add(b);
-        auditService.addOperation(new Operation(OperationType.ADD,2, ImmutableList.of(a,b), result));
-        return result;
+        if( auditService.addOperation(new Operation(OperationType.ADD,2, ImmutableList.of(a,b), result))){
+            return result;
+        } else {
+            throw new RuntimeException("Failed to save operation with audit service");
+        }
     }
 
     @Override

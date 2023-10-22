@@ -9,5 +9,10 @@ public interface AuditService {
      */
     List<Operation> lastOperations(int count);
 
-    void addOperation(Operation o);
+    /**
+     *
+     * @param o
+     * @return true if the operation was successful
+     */
+    boolean addOperation(Operation o);
 }

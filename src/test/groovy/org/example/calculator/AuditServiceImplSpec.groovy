@@ -8,11 +8,11 @@ class AuditServiceImplSpec extends Specification {
     def 'Audit service allows retrieval of the last #n saved operations'() {
         given:
         AuditService audit = new AuditServiceImpl()
-        audit.addOperation(addOp(1.1, 2.2, 3.3))
-        audit.addOperation(addOp(2.1, 3.2, 5.3))
-        audit.addOperation(addOp(3.1, 4.2, 7.3))
-        audit.addOperation(addOp(4.1, 5.2, 9.3))
-        audit.addOperation(addOp(5.1, 6.2, 11.3))
+        audit.addOperation(createOp(1.1, 2.2, 3.3))
+        audit.addOperation(createOp(2.1, 3.2, 5.3))
+        audit.addOperation(createOp(3.1, 4.2, 7.3))
+        audit.addOperation(createOp(4.1, 5.2, 9.3))
+        audit.addOperation(createOp(5.1, 6.2, 11.3))
 
         when:
         def result = audit.lastOperations(n)
@@ -22,16 +22,16 @@ class AuditServiceImplSpec extends Specification {
         where:
         n    | expected
         0    | []      // empty list
-        1    | [addOp(5.1, 6.2, 11.3)]
-        2    | [addOp(5.1, 6.2, 11.3), addOp(4.1, 5.2, 9.3)]
-        3    | [addOp(5.1, 6.2, 11.3), addOp(4.1, 5.2, 9.3), addOp(3.1, 4.2, 7.3)]
-        4    | [addOp(5.1, 6.2, 11.3), addOp(4.1, 5.2, 9.3), addOp(3.1, 4.2, 7.3), addOp(2.1, 3.2, 5.3)]
-        5    | [addOp(5.1, 6.2, 11.3), addOp(4.1, 5.2, 9.3), addOp(3.1, 4.2, 7.3), addOp(2.1, 3.2, 5.3), addOp(1.1, 2.2, 3.3)]
-        6    | [addOp(5.1, 6.2, 11.3), addOp(4.1, 5.2, 9.3), addOp(3.1, 4.2, 7.3), addOp(2.1, 3.2, 5.3), addOp(1.1, 2.2, 3.3)]
-        1000 | [addOp(5.1, 6.2, 11.3), addOp(4.1, 5.2, 9.3), addOp(3.1, 4.2, 7.3), addOp(2.1, 3.2, 5.3), addOp(1.1, 2.2, 3.3)]
+        1    | [createOp(5.1, 6.2, 11.3)]
+        2    | [createOp(5.1, 6.2, 11.3), createOp(4.1, 5.2, 9.3)]
+        3    | [createOp(5.1, 6.2, 11.3), createOp(4.1, 5.2, 9.3), createOp(3.1, 4.2, 7.3)]
+        4    | [createOp(5.1, 6.2, 11.3), createOp(4.1, 5.2, 9.3), createOp(3.1, 4.2, 7.3), createOp(2.1, 3.2, 5.3)]
+        5    | [createOp(5.1, 6.2, 11.3), createOp(4.1, 5.2, 9.3), createOp(3.1, 4.2, 7.3), createOp(2.1, 3.2, 5.3), createOp(1.1, 2.2, 3.3)]
+        6    | [createOp(5.1, 6.2, 11.3), createOp(4.1, 5.2, 9.3), createOp(3.1, 4.2, 7.3), createOp(2.1, 3.2, 5.3), createOp(1.1, 2.2, 3.3)]
+        1000 | [createOp(5.1, 6.2, 11.3), createOp(4.1, 5.2, 9.3), createOp(3.1, 4.2, 7.3), createOp(2.1, 3.2, 5.3), createOp(1.1, 2.2, 3.3)]
     }
 
-    private Operation addOp(BigDecimal a, BigDecimal b, BigDecimal result) {
+    private Operation createOp(BigDecimal a, BigDecimal b, BigDecimal result) {
         new Operation(OperationType.ADD, 2, [a, b], result)
     }
 
