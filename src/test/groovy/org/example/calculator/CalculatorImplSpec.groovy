@@ -32,9 +32,9 @@ class CalculatorImplSpec extends Specification {
 
         where:
         // paramaterised tests
-        a  | b || expectedSum
-        1  | 2 || 4
-        -1 | 1 || 0
+        a   | b || expectedSum
+        1.0 | 2 || 3.0
+        -1  | 1 || 0
 
 // example error message in logs:
 //
@@ -63,7 +63,7 @@ class CalculatorImplSpec extends Specification {
 //        1* history.addOperation(_)
 
         // when failure, good error reporting in the test logs
-        1* history.addOperation(new Operation(OperationType.ADD, 2, [1.5,0.5] /* a list */, 2.0))
+        1 * history.addOperation(new Operation(OperationType.ADD, 2, [1.5, 0.5] /* a list */, 2.0))
         // cardinality range
 //        (0..1)* history.addOperation(new Operation(OperationType.ADD, 2, [1.5,0.5], 2.0))
 
@@ -117,5 +117,19 @@ class CalculatorImplSpec extends Specification {
         then:
         def e = thrown(ArithmeticException)
         e.message == "Division by zero"
+    }
+
+
+    def 'Mocks with stubbed behaviour'() {
+        given: 'a calculator'
+
+        def history = Mock(AuditService)       // creates a mock implementation for interface OperationsHistory
+        def calculator = new CalculatorImpl(history)
+
+        when:
+        def result = calculator.add(1.5, 0.5)
+        then:
+        result == 2.0
+
     }
 }
