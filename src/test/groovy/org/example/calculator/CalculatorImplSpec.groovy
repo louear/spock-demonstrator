@@ -1,18 +1,17 @@
 package org.example.calculator
 
+import org.example.calculator.impl.AuditServiceImpl
 import org.example.calculator.impl.CalculatorImpl
-import org.example.calculator.impl.OperationsHistoryImpl
 import spock.lang.Specification
 import spock.lang.Timeout
 import spock.lang.Unroll
-
 
 class CalculatorImplSpec extends Specification {
 
     def calculator
 
     def setup() {
-        calculator = new CalculatorImpl(new OperationsHistoryImpl())
+        calculator = new CalculatorImpl(new AuditServiceImpl())
     }
 
 
@@ -48,10 +47,10 @@ class CalculatorImplSpec extends Specification {
 //                <org.example.calculator.impl.CalculatorImpl@424ebba3 operationsHistory=org.example.calculator.impl.OperationsHistoryImpl@4d722ac9>
     }
 
-    def 'adding two numbers adds an entry in the operations history with mock'() {
+    def 'adding two numbers adds saves the operation in the AuditService'() {
         given: 'a calculator'
 
-        def history = Mock(OperationsHistory)       // creates a mock implementation for interface OperationsHistory
+        def history = Mock(AuditService)       // creates a mock implementation for interface OperationsHistory
         def calculator = new CalculatorImpl(history)
 
         when:
